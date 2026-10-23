@@ -6,6 +6,23 @@
 
 .viewer-strip{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,#000e 24%);padding:18px 12px calc(env(safe-area-inset-bottom) + 12px);display:none;flex-direction:column;gap:10px;z-index:3}.viewer.strip-open .viewer-strip{display:flex}.viewer-film{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#888 #222;padding:3px 2px;overscroll-behavior-x:contain}.viewer-film button{flex:0 0 65px;width:65px;height:65px;border:2px solid transparent;padding:0;border-radius:3px;overflow:hidden;min-width:0;min-height:0;position:relative;background:#222}.viewer-film button.selected{border-color:white}.viewer-film img{width:100%;height:100%;object-fit:cover;display:block}.viewer-film small{position:absolute;right:2px;bottom:2px;background:#000a;color:white;padding:1px 3px;font-size:10px}.viewer-range{width:100%;accent-color:#fff;touch-action:pan-x}.viewer.strip-open .viewer-hint{display:none}.viewer.hide-ui .viewer-strip{display:none}.viewer-strip-toggle{font-size:12px;white-space:nowrap}.viewer-controls{gap:8px}.viewer-count{flex:1;text-align:center}
 
+/* Book layout: paper edge, binding, and an outgoing hinged page. */
+.book-stage{position:relative;display:flex;align-items:center;justify-content:center;width:min(94vw,1200px);height:min(78dvh,850px);perspective:1800px;filter:drop-shadow(0 12px 24px #0009);isolation:isolate}
+.book-page,.turn-page{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:clamp(9px,2vw,23px);background:#ece9e0;border:1px solid #aaa79f;box-shadow:inset 0 0 0 3px #faf8f1,6px 5px 0 #b6b1a7,9px 8px 0 #77736e}
+.book-page:after,.turn-page:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#0002,transparent 8%,transparent 91%,#0002)}
+.book-stage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;box-shadow:0 2px 8px #0003}
+.turn-page{z-index:2;display:none;backface-visibility:hidden;transform-style:preserve-3d;will-change:transform}
+.turn-page.turn-forward{display:flex;transform-origin:left center;animation:flipForward .78s cubic-bezier(.32,.04,.63,1) forwards}
+.turn-page.turn-back{display:flex;transform-origin:right center;animation:flipBack .78s cubic-bezier(.32,.04,.63,1) forwards}
+@keyframes flipForward{0%{transform:rotateY(0);filter:brightness(1)}48%{filter:brightness(.58)}100%{transform:rotateY(-178deg);filter:brightness(.88)}}
+@keyframes flipBack{0%{transform:rotateY(0);filter:brightness(1)}48%{filter:brightness(.58)}100%{transform:rotateY(178deg);filter:brightness(.88)}}
+.film-options{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:8px 0;color:white;font-size:12px}
+.film-options label{display:flex;align-items:center;gap:7px}
+#thumb-size{width:90px;accent-color:white}
+#viewer-film button{flex:0 0 var(--thumb-size,88px);width:var(--thumb-size,88px)}
+#viewer-film img{width:100%;height:calc(var(--thumb-size,88px)*.75);object-fit:cover}
+@media(max-width:600px){.book-stage{width:94vw;height:72dvh}.book-page,.turn-page{padding:9px}.viewer-controls{gap:5px}.viewer-controls button{padding:8px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.turn-page.turn-forward,.turn-page.turn-back{animation:none;display:none}}
 /* Full-screen photobook is the default landing experience. */
 .viewer{display:flex!important;visibility:hidden;opacity:0;pointer-events:none}
 .viewer.open{visibility:visible;opacity:1;pointer-events:auto}
@@ -13,31 +30,47 @@ body.book-active{overflow:hidden}
 body.book-active .viewer{visibility:visible;opacity:1;pointer-events:auto}
 #return-book[hidden]{display:none}
 #return-book{font-size:12px}
-.viewer #viewer-image{transform-origin:50% 50%;backface-visibility:hidden;will-change:transform,opacity,filter}
-.viewer #viewer-image.page-next{animation:pageNext .52s cubic-bezier(.2,.65,.3,1)}
-.viewer #viewer-image.page-prev{animation:pagePrev .52s cubic-bezier(.2,.65,.3,1)}
-@keyframes pageNext{
-  0%{transform:perspective(1300px) rotateY(-68deg) scale(.93);opacity:.24;filter:brightness(.65)}
-  55%{filter:brightness(.83)}
-  100%{transform:perspective(1300px) rotateY(0) scale(1);opacity:1;filter:brightness(1)}
-}
-@keyframes pagePrev{
-  0%{transform:perspective(1300px) rotateY(68deg) scale(.93);opacity:.24;filter:brightness(.65)}
-  55%{filter:brightness(.83)}
-  100%{transform:perspective(1300px) rotateY(0) scale(1);opacity:1;filter:brightness(1)}
-}
-@media(prefers-reduced-motion:reduce){.viewer #viewer-image.page-next,.viewer #viewer-image.page-prev{animation:none}}
-</style></head><body><header><a class="logo" href="#top">MEVS</a><div class="right"><a class="link" href="https://pixelfed.social/mevs" target="_blank" rel="noopener">Pixelfed ↗</a><button id="return-book" type="button" hidden>◫ Book view</button><button id="theme" aria-label="Toggle dark mode">◐ Theme</button></div></header><main id="top"><section class="intro"><div class="eyebrow">Photography / An ongoing collection</div><h1>Life, observed.</h1><p>Moments in passing. A visual journal of ordinary scenes, unexpected details, and the spaces between.</p></section><div id="demo" class="demo">Design preview — sample compositions, not your photographs</div><div class="gallery" id="gallery"><figure class="photo"><div class="sample"></div><figcaption><span>001 — An ordinary moment</span><span>Photography</span></figcaption></figure><figure class="photo"><div class="sample wide"></div><figcaption><span>002 — In passing</span><span>Photography</span></figcaption></figure><figure class="photo"><div class="sample square"></div><figcaption><span>003 — Between places</span><span>Photography</span></figcaption></figure></div></main><footer>MEVS · PHOTOGRAPHY<br><br><a href="https://pixelfed.social/mevs">Follow on Pixelfed ↗</a></footer><div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Fullscreen photo viewer" tabindex="-1"><img id="viewer-image" alt=""><div class="viewer-controls"><button id="viewer-close" aria-label="Open scrolling gallery">☰ Scroll</button><span id="viewer-count" class="viewer-count"></span><button id="viewer-strip-toggle" class="viewer-strip-toggle" aria-label="Toggle photo selector" aria-expanded="false">▦ Photos</button><button id="viewer-full" aria-label="Toggle fullscreen">⛶</button></div><button class="viewer-nav viewer-prev" id="viewer-prev" aria-label="Previous photograph">‹</button><button class="viewer-nav viewer-next" id="viewer-next" aria-label="Next photograph">›</button><span class="viewer-hint">Swipe to turn pages · Rotate for landscape</span><div class="viewer-strip" id="viewer-strip"><input id="viewer-range" class="viewer-range" type="range" min="1" max="1" value="1" aria-label="Select photo by number"><div id="viewer-film" class="viewer-film" aria-label="All photos"></div></div></div><script>
-const button=document.getElementById('theme');function theme(d){document.body.classList.toggle('dark',d);button.textContent=d?'☀ Light':'◐ Dark';localStorage.setItem('mevs-theme',d?'dark':'light')}theme(localStorage.getItem('mevs-theme')==='dark'||(!localStorage.getItem('mevs-theme')&&matchMedia('(prefers-color-scheme: dark)').matches));button.onclick=()=>theme(!document.body.classList.contains('dark'));
+</style></head><body><header><a class="logo" href="#top">MEVS</a><div class="right"><a class="link" href="https://pixelfed.social/mevs" target="_blank" rel="noopener">Pixelfed ↗</a><button id="return-book" type="button" hidden>◫ Book view</button><button id="theme" aria-label="Toggle dark mode">◐ Theme</button></div></header><main id="top"><section class="intro"><div class="eyebrow">Photography / An ongoing collection</div><h1>Life, observed.</h1><p>Moments in passing. A visual journal of ordinary scenes, unexpected details, and the spaces between.</p></section><div id="demo" class="demo">Design preview — sample compositions, not your photographs</div><div class="gallery" id="gallery"><figure class="photo"><div class="sample"></div><figcaption><span>001 — An ordinary moment</span><span>Photography</span></figcaption></figure><figure class="photo"><div class="sample wide"></div><figcaption><span>002 — In passing</span><span>Photography</span></figcaption></figure><figure class="photo"><div class="sample square"></div><figcaption><span>003 — Between places</span><span>Photography</span></figcaption></figure></div></main><footer>MEVS · PHOTOGRAPHY<br><br><a href="https://pixelfed.social/mevs">Follow on Pixelfed ↗</a></footer><div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Fullscreen photo viewer" tabindex="-1"><div class="book-stage" id="book-stage"><div class="book-page" id="book-page"><img id="viewer-image" alt=""></div><div class="turn-page" id="turn-page" aria-hidden="true"><img id="turn-image" alt=""></div></div><div class="viewer-controls"><button id="viewer-close" aria-label="Open scrolling gallery">☰ Scroll</button><span id="viewer-count" class="viewer-count"></span><button id="viewer-random" aria-label="Show random photograph" title="Random photo">⤨ Random</button><button id="viewer-strip-toggle" class="viewer-strip-toggle" aria-label="Toggle photo selector" aria-expanded="false">▦ Photos</button><button id="viewer-full" aria-label="Toggle fullscreen">⛶</button></div><button class="viewer-nav viewer-prev" id="viewer-prev" aria-label="Previous photograph">‹</button><button class="viewer-nav viewer-next" id="viewer-next" aria-label="Next photograph">›</button><span class="viewer-hint">Swipe to turn pages · Rotate for landscape</span><div class="viewer-strip" id="viewer-strip"><input id="viewer-range" class="viewer-range" type="range" min="1" max="1" value="1" aria-label="Select photo by number"><div class="film-options"><button id="viewer-shuffle" type="button">⇄ Shuffle thumbnails</button><label>Thumbnail size <input id="thumb-size" type="range" min="56" max="180" value="88"></label></div><div id="viewer-film" class="viewer-film" aria-label="All photos"></div></div></div><script>
+const button=document.getElementById('theme');function theme(d){document.body.classList.toggle('dark',d);button.textContent=d?'☀ Light':'◐ Dark';localStorage.setItem('mevs-theme',d?'dark':'light')}theme(localStorage.getItem('mevs-theme')==='dark'||!localStorage.getItem('mevs-theme'));button.onclick=()=>theme(!document.body.classList.contains('dark'));
 const gallery=document.getElementById('gallery');let photos=[];function render(items){photos=items;gallery.replaceChildren();for(let i=0;i<items.length;i++){let p=items[i],fig=document.createElement('figure');fig.className='photo';let a=document.createElement('a');a.href=p.post_url||'https://pixelfed.social/mevs';a.target='_blank';a.rel='noopener';a.addEventListener('click',e=>{e.preventDefault();openViewer(i)});let img=document.createElement('img');img.src=p.image;img.alt=p.alt||'Photograph by MEVS';img.loading=i<2?'eager':'lazy';a.append(img);let cap=document.createElement('figcaption'),left=document.createElement('span'),right=document.createElement('span');left.textContent=String(items.length-i).padStart(3,'0')+(p.caption?' — '+p.caption:'');right.textContent=p.date||'MEVS';cap.append(left,right);fig.append(a,cap);gallery.append(fig)}document.getElementById('demo').hidden=true}fetch('./photos.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json()}).then(data=>{if(Array.isArray(data)&&data.length){render(data);openViewer(0)}}).catch(()=>{});
 
-const viewer=document.getElementById('viewer'),viewerImage=document.getElementById('viewer-image'),counter=document.getElementById('viewer-count');let current=0,previousFocus=null;const viewerRange=document.getElementById('viewer-range'),viewerFilm=document.getElementById('viewer-film'),stripToggle=document.getElementById('viewer-strip-toggle');function buildSelector(){viewerFilm.replaceChildren();viewerRange.max=photos.length;photos.forEach((p,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','View photograph '+(photos.length-i));const im=document.createElement('img');im.src=p.image;im.alt='';im.loading='lazy';const num=document.createElement('small');num.textContent=photos.length-i;b.append(im,num);b.onclick=()=>showPhoto(i);viewerFilm.append(b)})}viewerRange.addEventListener('input',()=>showPhoto(photos.length-Number(viewerRange.value)));stripToggle.onclick=()=>{const opened=viewer.classList.toggle('strip-open');stripToggle.setAttribute('aria-expanded',String(opened));stripToggle.textContent=opened?'▦ Hide':'▦ Photos';if(opened)viewerFilm.children[current]?.scrollIntoView({block:'nearest',inline:'center'})};
-function showPhoto(n){if(!photos.length)return;
-const old=current;current=(n+photos.length)%photos.length;const p=photos[current];
-viewerImage.classList.remove('page-next','page-prev');
-void viewerImage.offsetWidth;
-if(viewer.classList.contains('open')&&old!==current) viewerImage.classList.add(n>old?'page-next':'page-prev');
-viewerImage.src=p.image;viewerImage.alt=p.alt||'Photograph by MEVS';counter.textContent=String(photos.length-current).padStart(2,'0')+' / '+String(photos.length).padStart(2,'0');viewerRange.value=photos.length-current;viewerFilm.querySelectorAll('button').forEach((b,i)=>{b.classList.toggle('selected',i===current);b.setAttribute('aria-current',i===current?'true':'false')});if(viewer.classList.contains('strip-open'))viewerFilm.children[current]?.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});viewer.classList.remove('hide-ui')}
+const viewer=document.getElementById('viewer'),viewerImage=document.getElementById('viewer-image'),counter=document.getElementById('viewer-count');let current=0,previousFocus=null;const viewerRange=document.getElementById('viewer-range'),viewerFilm=document.getElementById('viewer-film'),stripToggle=document.getElementById('viewer-strip-toggle');let selectorOrder=[],shuffled=false;
+function buildSelector(){
+ viewerFilm.replaceChildren();
+ selectorOrder=Array.from({length:photos.length},(_,i)=>i);
+ if(shuffled){for(let i=selectorOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[selectorOrder[i],selectorOrder[j]]=[selectorOrder[j],selectorOrder[i]]}}
+ selectorOrder.forEach(i=>{const p=photos[i],b=document.createElement('button');b.type='button';b.dataset.index=i;
+ b.setAttribute('aria-label','View photograph '+(photos.length-i));const im=document.createElement('img');im.src=p.image;im.alt='';im.loading='lazy';
+ const num=document.createElement('small');num.textContent=photos.length-i;b.append(im,num);b.onclick=()=>showPhoto(i);viewerFilm.append(b)});
+ updateSelection();
+}
+function updateSelection(){viewerFilm.querySelectorAll('button').forEach(b=>{const active=Number(b.dataset.index)===current;b.classList.toggle('selected',active);b.setAttribute('aria-current',active?'true':'false')})}
+function centerSelection(){viewerFilm.querySelector('button.selected')?.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'})}
+viewerRange.addEventListener('input',()=>showPhoto(photos.length-Number(viewerRange.value)));
+document.getElementById('viewer-shuffle').onclick=()=>{shuffled=!shuffled;document.getElementById('viewer-shuffle').textContent=shuffled?'↕ Restore order':'⇄ Shuffle thumbnails';buildSelector();centerSelection()};
+document.getElementById('thumb-size').oninput=e=>viewerFilm.style.setProperty('--thumb-size',e.target.value+'px');
+document.getElementById('viewer-random').onclick=()=>{if(photos.length<2)return;let n=Math.floor(Math.random()*(photos.length-1));if(n>=current)n++;showPhoto(n)};
+stripToggle.onclick=()=>{const opened=viewer.classList.toggle('strip-open');stripToggle.setAttribute('aria-expanded',String(opened));stripToggle.textContent=opened?'▦ Hide':'▦ Photos';if(opened)centerSelection()};
+let flipTimer=null;
+const turnPage=document.getElementById('turn-page'),turnImage=document.getElementById('turn-image');
+function showPhoto(n){
+ if(!photos.length)return;
+ const old=current,next=(n+photos.length)%photos.length;
+ const prior=photos[old];
+ clearTimeout(flipTimer);turnPage.classList.remove('turn-forward','turn-back');turnPage.style.display='none';
+ current=next;const p=photos[current];
+ viewerImage.src=p.image;viewerImage.alt=p.alt||'Photograph by MEVS';
+ counter.textContent=String(photos.length-current).padStart(2,'0')+' / '+String(photos.length).padStart(2,'0');
+ viewerRange.value=photos.length-current;updateSelection();
+ if(viewer.classList.contains('strip-open'))centerSelection();
+ viewer.classList.remove('hide-ui');
+ if(viewer.classList.contains('open')&&old!==next&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+   turnImage.src=prior.image;turnPage.style.display='flex';
+   void turnPage.offsetWidth;
+   turnPage.classList.add(n>old?'turn-forward':'turn-back');
+   flipTimer=setTimeout(()=>{turnPage.classList.remove('turn-forward','turn-back');turnPage.style.display='none'},800);
+ }
+}
 function openViewer(n){previousFocus=document.activeElement;buildSelector();showPhoto(n);viewer.classList.add('open');document.body.classList.add('book-active');document.getElementById('return-book').hidden=true;viewer.focus()}
 function closeViewer(){viewer.classList.remove('open','strip-open','hide-ui');document.body.classList.remove('book-active');stripToggle.textContent='▦ Photos';stripToggle.setAttribute('aria-expanded','false');document.getElementById('return-book').hidden=false;if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});window.scrollTo({top:0,behavior:'instant'});if(previousFocus)previousFocus.focus()}
 document.getElementById('return-book').onclick=()=>openViewer(current);
